@@ -65,10 +65,14 @@ dev.off()
 ###############################  heliconius  ###################################
 ################################################################################
 
-pop_combos <- c("mpg_ama_txn_slv",
+pop_combos <- c("mpg_ama_txn_slvr   ",
                 "chi_txn_ama_slv",
                 "mpg_ros_chi_slv",
                 "flo_chi_ros_slv")
+
+
+#in this case the SFS was not polarised when it was computed.
+#we therefore first polarise each SFS using the oygroup (slv) before computing DFS
 
 for (pops in pop_combos){
     FS_heli <- read.table(paste0("empirical_data/Heliconius/bar92.DP8MIN92BIHET75.minor.",pops,".sfs"))
