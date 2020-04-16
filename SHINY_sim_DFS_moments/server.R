@@ -6,7 +6,7 @@ if.null <- function(x,y){
     }
 
 make_3pop_sim_command <- function(params){
-    paste("python3", "~/Research/genomics_general/sim/sim_SFS_moments.py",
+    paste("python3", "sim_SFS_moments.py",
         "--Nsam", paste(params$n1,params$n2,params$n3),
         
         "--twoPopPeriod", paste0("T=",params$p2_T, #input is in units of 2N gen
