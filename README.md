@@ -4,7 +4,7 @@
 
 *D*<sub>FS</sub> is a simple extension to the classic D statistic (AKA the ABBA BABA test). *D*<sub>FS</sub> partitions *D* according to the frequencies of derived alleles. Thus, it reveals how the overall *D* value is broken down across different allele frequency classes (or bins). *D*<sub>FS</sub> therefore carries information about the timing and direction of introgression.
 
-Check out this [SHINY app](https://shmartin.shinyapps.io/shiny_plot_dfs_moments/) that allows you to explore how *D*<sub>FS</sub> behavies over a range of model parameters here.
+Check out this [SHINY app](https://shmartin.shinyapps.io/shiny_plot_dfs_moments/) that allows you to explore how *D*<sub>FS</sub> behavies over a range of model parameters.
 
 ## Code in this repository
 
@@ -36,11 +36,11 @@ The srcript `plot_DFS_from_SFS.R` gives code to compute and plot *D*<sub>FS</sub
 
 #### Tabular frquency spectrum
 
-These scripts make use of 3D or 4D frequency spectra. However, because these can have very many entries (sometimes more than the number of SNPs in the genome if sample sizes are large), the scripts do not make use of standard SFS formats. Instead the they use of a sparse tabular format, which only records non-zero entries of the SFS. This is simply a table in which the first three columns (of 4 in the case of a 4D SFS) give the allele count in each population(equivalent to the indices of the multidimensional SFS), and the final column gives the corresponding nubmber of sites.
+These scripts make use of 3D or 4D frequency spectra. However, because these can have very many entries (sometimes more than the number of SNPs in the genome if sample sizes are large), the scripts do not make use of standard SFS formats. Instead the they use of a sparse tabular format, which only records non-zero entries of the SFS. This is simply a table in which the first three columns (or 4 in the case of a 4D SFS) give the allele count in each population (equivalent to the indices of the multidimensional SFS), and the final column gives the corresponding number of sites.
 
 #### Compute SFS from a VCF file
 
-Given a VCF file with three focal populations and an outgroup, you can compute a 3D SFS using a few steps. **Note that DFS is only useful if your sample size for populations P1 and P2 is at least 10 haploid genomes (5 diploids)**.
+Given a VCF file with three focal populations and an outgroup, you can compute a 3D SFS using a few steps. **Note that *D*<sub>FS</sub> is only useful if your sample size for populations P1 and P2 is at least 10 haploid genomes (5 diploids)**.
 
 Before doing so, it is necessary to download the `genomics_general` reporitory.
 
@@ -58,7 +58,7 @@ To ensure that the libraries are recognisable by python, add the `genomics_gener
 export PYTHONPATH=$PYTHONPATH:genomics_general-0.3
 ```
 
-Then, convert the VCF to `.geno` format for downstream analysis. Here we add a filter to retain only genotypes suppoted by a read depth of 8
+Then, convert the VCF to `.geno` format for downstream analysis. Here we add a filter to retain only genotypes suppoted by a read depth of 8.
 
 ```bash
 python genomics_general-0.3/VCF_processing/parseVCFs.py --threads 6 \
