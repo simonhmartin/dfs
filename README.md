@@ -1,5 +1,10 @@
 # The *D* Frequency Spectrum
 
+* [Introduction](#Introduction)
+* [Code in this repository](#Code-in-this-repository)
+* [Explore *D*<sub>FS</sub> using a local R SHINY app](#Explore-DFS-using-a-local-R-SHINY-app)
+* [Compute *D*<sub>FS</sub> from empirical data](#Compute-DFS-from-empirical-data)
+
 ## Introduction
 
 *D*<sub>FS</sub> is a simple extension to the classic D statistic (AKA the ABBA BABA test). *D*<sub>FS</sub> partitions *D* according to the frequencies of derived alleles. Thus, it reveals how the overall *D* value is broken down across different allele frequency classes (or bins). *D*<sub>FS</sub> therefore carries information about the timing and direction of introgression.
