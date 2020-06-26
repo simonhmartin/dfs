@@ -32,11 +32,13 @@ runApp()
 
 ## Compute *D*<sub>FS</sub> from empirical data
 
-The srcript `plot_DFS_from_SFS.R` gives code to compute and plot *D*<sub>FS</sub> given an input frequency spectrum.
+The script `plot_DFS_from_SFS.R` gives code to compute and plot *D*<sub>FS</sub> given an input frequency spectrum.
 
 #### Tabular frquency spectrum
 
-These scripts make use of 3D or 4D frequency spectra. However, because these can have very many entries (sometimes more than the number of SNPs in the genome if sample sizes are large), the scripts do not make use of standard SFS formats. Instead the they use of a sparse tabular format, which only records non-zero entries of the SFS. This is simply a table in which the first three columns (or 4 in the case of a 4D SFS) give the allele count in each population (equivalent to the indices of the multidimensional SFS), and the final column gives the corresponding number of sites.
+These scripts make use of 3D or 4D frequency spectra. However, because these can have very many entries (sometimes more than the number of SNPs in the genome if sample sizes are large), and many of these will be zero, the scripts do not make use of standard SFS formats. Instead the they use of a sparse tabular format, which only records non-zero entries of the SFS. This is simply a table in which the first three columns (or 4 in the case of a 4D SFS) give the allele count in each population (equivalent to the indices of the multidimensional SFS). The final column gives the corresponding number of sites.
+
+Within the script, there are lines that specify which columns correspond to each population and which column corresponds to the number of sites.
 
 #### Compute SFS from a VCF file
 
@@ -67,14 +69,14 @@ python genomics_general-0.3/VCF_processing/parseVCFs.py --threads 6 \
 
 Now we can compute the SFS. This command has two parts. It first runs `freq.py` to compute allele frequencies at each cite in each population. This requires that you also provide a populations file, that gives all samples names in the first column and tyhe population they belong to in the second column (you can use any names for your populations).
 
-The output is pipled to `sfs.py`, which produces one or more SFS files. By including the `--polarized` glag, we are telling it that the final population listed ("OG") should be used as an outgroup to polarise allele frequencies. We then tell it to output just one 3D SFS, representing populations P1, P2 and P3. We also specify that it should subsample the data down to 10 haploid genomes for P1 and P2 and 2 for P3. This is useful if you have larger sample sizes but lots of missing data. At each site, the script will try to use the available data to make up the number of genomes required. **Note that your SFS must have the same number of samples for P1 and P2**.
+The output is piped to `sfs.py`, which produces one or more SFS files. By including the `--polarized` glag, we are telling it that the final population listed ("OG") should be used as an outgroup to polarise allele frequencies. We then tell it to output just one 3D SFS, representing populations P1, P2 and P3. We also specify that it should subsample the data down to 10 haploid genomes for P1 and P2 and 2 for P3. This is useful if you have larger sample sizes but lots of missing data. At each site, the script will try to use the available data to make up the number of genomes required. **Note that your SFS must have the same number of samples for P1 and P2**.
 
 ``` bash
 python genomics_general-0.3/freq.py --threads 6 -g mydata.geno.gz \
 -p P1 -p P2 -p P3 -p OG --popsFile populations.txt |
 python genomics_general-0.3/sfs.py --inputType baseCounts \
 -p P1 -p P2 -p P3 -p OG --polarized \
---FSpops P1 P2 P2 --subsample 10 10 2 \
+--FSpops P1 P2 P3 --subsample 10 10 2 \
  --pref mydata. 
 ```
 The resulting SFS can be loaded into the script `plot_DFS_from_SFS.R`.
