@@ -7,12 +7,9 @@ source("DFS.R")
 
 FS <- read.table("empirical_data/Arabidopsis/arn_lyr_72.DP5MIN58MAC2.lyrata2_lyrata4_arenosa4.sfs")
 
-
 ### get Dfs
 
 dfs_data <- get.DFS(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(14,14,4))
-
-dfs2D_data <- get.DFS2D(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(14,14,4))
 
 ### plot
 
@@ -25,18 +22,16 @@ dev.off()
 ##############################  datepalms ######################################
 ################################################################################
 
-FS <- read.table("empirical_data/datepalms/Flowers.SNPs.DP8.dactylifera_ME_dactylifera_NA_theophrasti.subsample10.sfs")
+FS <- read.table("empirical_data/datepalms/Flowers.SNPs.DP8.dactylifera_Iraq_dactylifera_Morocco_theophrasti.subsample10.sfs")
 
 ### get Dfs
 
 dfs_data <- get.DFS(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(20,20,10))
 D <- get.D.from.base.counts(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(20,20,10))
-# f <- get.f.from.base.counts(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(20,20,10))
-# dcfs <- get.dcfs(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(12,12,4))
 
 ### plot
 
-png("images/DFS_Datepalms_dacME_dacNA_the.png", width = 2000, height = 1000, res=300)
+png("images/DFS_Datepalms_dacIrq_dacMor_the.png", width = 2000, height = 1000, res=300)
 par(mar=c(1,4,1,1))
 plotDFS(dfs_data$DFS, dfs_data$weights, method="lines", col_D="red", no_xlab=T)
 dev.off()
@@ -50,9 +45,8 @@ FS <- read.table("empirical_data/sparrows/Walsh2018_Evolution.RawSNPData.DP4.NEL
 ### get Dfs
 
 dfs_data <- get.DFS(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(12,12,4))
-# D <- get.D.from.base.counts(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(12,12,4))
-# f <- get.f.from.base.counts(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(12,12,4))
-# dcfs <- get.dcfs(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(12,12,4))
+D <- get.D.from.base.counts(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(12,12,4))
+f <- get.f.from.base.counts(base_counts=FS[,-4], site_counts=FS[,4], Ns = c(12,12,4))
 
 ### plot
 
