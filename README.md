@@ -53,36 +53,36 @@ Before doing so, it is necessary to download the `genomics_general` reporitory.
 
 ```bash
 #download package
-wget https://github.com/simonhmartin/genomics_general/archive/v0.3.tar.gz
+wget https://github.com/simonhmartin/genomics_general/archive/v0.4.tar.gz
 #extract files from zipped archive
-tar -xzf v0.3.tar.gz
+tar -xzf v0.4.tar.gz
 #delete zipped file
-rm v0.3.tar.gz
+rm v0.4.tar.gz
 ```
 To ensure that the libraries are recognisable by python, add the `genomics_general' directory to the Python path
 
 ```bash
-export PYTHONPATH=$PYTHONPATH:genomics_general-0.3
+export PYTHONPATH=$PYTHONPATH:genomics_general-0.4
 ```
 
 Then, convert the VCF to `.geno` format for downstream analysis. Here we add a filter to retain only genotypes suppoted by a read depth of 8.
 
 ```bash
-python genomics_general-0.3/VCF_processing/parseVCFs.py --threads 6 \
+python genomics_general-0.4/VCF_processing/parseVCFs.py --threads 6 \
 -i mydata.vcf.gz --skipIndels --gtf flag=DP min=8 -o mydata.geno.gz
 ```
 
 Now we can compute the SFS. This command has two parts. It first runs `freq.py` to compute allele frequencies at each cite in each population. This requires that you also provide a populations file, that gives all samples names in the first column and tyhe population they belong to in the second column (you can use any names for your populations).
 
-The output is piped to `sfs.py`, which produces one or more SFS files. By including the `--polarized` glag, we are telling it that the final population listed ("OG") should be used as an outgroup to polarise allele frequencies. We then tell it to output just one 3D SFS, representing populations P1, P2 and P3. We also specify that it should subsample the data down to 10 haploid genomes for P1 and P2 and 2 for P3. This is useful if you have larger sample sizes but lots of missing data. At each site, the script will try to use the available data to make up the number of genomes required. **Note that your SFS must have the same number of samples for P1 and P2**.
+The output is piped to `sfs.py`, which produces one or more SFS files. By including the `--outgroup OG` flag, we are telling it to use the outgroup population ("OG") to polarise allele frequencies for the ingroups. We then tell it to output just one 3D SFS, representing populations P1, P2 and P3. We also specify that it should subsample the data down to 10 haplotypes for P1 and P2 and 2 for P3. This is useful if you have larger sample sizes but lots of missing data. At each site, the script will try to use the available data to make up the number of genomes required. **Note that your SFS must have the same number of samples for P1 and P2**.
 
 ``` bash
-python genomics_general-0.3/freq.py --threads 6 -g mydata.geno.gz \
+python genomics_general-0.4/freq.py --threads 6 -g mydata.geno.gz \
 -p P1 -p P2 -p P3 -p OG --popsFile populations.txt |
-python genomics_general-0.3/sfs.py --inputType baseCounts \
--p P1 -p P2 -p P3 -p OG --polarized \
---FSpops P1 P2 P3 --subsample 10 10 2 \
- --pref mydata. 
+python genomics_general-0.4/sfs.py --inputType baseCounts \
+--outgroup OG  --FSpops P1 P2 P3 --subsample 10 10 2 \
+--pref mydata. --suff .subsample10.sfs
 ```
-The resulting SFS can be loaded into the script `plot_DFS_from_SFS.R`.
+
+The resulting SFS can be loaded into the script `plot_DFS_from_SFS.R`. Be sure to set the number of (haploid) samples correctly.
 
