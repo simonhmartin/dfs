@@ -68,7 +68,7 @@ export PYTHONPATH=$PYTHONPATH:genomics_general-0.4
 Then, convert the VCF to `.geno` format for downstream analysis. Here we add a filter to retain only genotypes suppoted by a read depth of 8.
 
 ```bash
-python genomics_general-0.4/VCF_processing/parseVCFs.py --threads 6 \
+python genomics_general-0.4/VCF_processing/parseVCF.py \
 -i mydata.vcf.gz --skipIndels --gtf flag=DP min=8 -o mydata.geno.gz
 ```
 
