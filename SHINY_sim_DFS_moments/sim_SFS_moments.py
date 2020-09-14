@@ -1,5 +1,29 @@
 #!/usr/bin/env python
 
+# Simon H. Martin 2020
+# simon.martin@ed.ac.uk
+
+# This script accompanies the paper:
+# "Signatures of introgression across the allelel frequency spectrum"
+# by Simon H. Martin and William Amos
+
+# It is a wrapper for the moments package (Jouganous et al. 2017, https://doi.org/10.1534/genetics.117.200493).
+
+# Simulation models are defined in periods.
+# Each period can have a defined length and size for each population
+
+# "--onePopPeriod" refers to periods before any population split.
+# If none of these are specified, it is assumed to have constant population size
+
+# "--twoPopPeriod" refers to periods after the first population split, and so on
+# for "--threePopPeriod" and "--fourPopPeriod".
+
+#Any number of periods can be specified.
+
+# Output is a frequency spectrum in tabular format.
+# The first N columns corrspond to base counts in the N populations
+# Final column represents the proportion of sites with that combination of base counts
+
 import numpy as np
 
 import moments
