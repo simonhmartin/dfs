@@ -237,22 +237,25 @@ polarize.counts <- function(counts, Ns, OGcolumn=NULL, outgroup_pol_to_NA=TRUE){
 
 ################################################ plotting functions
 
-plotDFS <- function(DFS, weights, method="lines", ylim=c(-1,1), show_D=TRUE, col_D="black", width_scale=100, no_xlab=FALSE){
+plotDFS <- function(DFS, weights, method="lines", ylim=c(-1,1), show_D=TRUE,
+                    col="black", col_D="black", width_scale=100, no_xlab=FALSE, add=FALSE){
     
     if (method == "lines"){
         N = length(DFS)
-        plot(0, xlim = c(1,N), ylim = ylim, cex=0, xlab = "", ylab = "", xaxt="n", bty="n")
-        abline(h=0)
-        segments(1:N, 0, 1:N, DFS, lwd = width_scale*weights, lend=1)
+        if (add == FALSE){
+            plot(0, xlim = c(1,N), ylim = ylim, cex=0, xlab = "", ylab = "", xaxt="n", bty="n")
+            abline(h=0)
+            }
+        segments(1:N, 0, 1:N, DFS, lwd = width_scale*weights, lend=1, col=col)
         }
     
-    if (method == "bars") barplot(DFS, col= rgb(0,0,0,weights), ylim = ylim)
+    if (method == "bars") barplot(DFS, col= rgb(0,0,0,weights), ylim = ylim, add=add)
     
-    if (method == "scaled_bars") barplot(DFS*weights, ylim = ylim)
+    if (method == "scaled_bars") barplot(DFS*weights, ylim = ylim, add=add)
     
-    if (no_xlab == FALSE) mtext(1,text="Derived allele frequency", line = 0)
+    if (no_xlab == FALSE & add == FALSE) mtext(1,text="Derived allele frequency", line = 0)
     
-    mtext(2,text=expression(italic("D")), line = 2.8, las=2)
+    if (add == FALSE) mtext(2,text=expression(italic("D")), line = 2.8, las=2)
     if (show_D == TRUE) abline(h= sum(DFS * weights), lty = 2, col=col_D)
     
     }
