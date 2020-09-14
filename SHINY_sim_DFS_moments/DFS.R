@@ -1,21 +1,29 @@
 
-get.patterns <- function(p1, p2, p3, pO=NULL){
-    #assume that if there's no outgroup, it is always fixed ancestral
-    if (is.null(pO)==TRUE | length(pO) == 0) pO <- 0
-    
-    data.frame(ABBA = (1 - p1) * p2 * p3 * (1-pO),
-               BABA = p1 * (1 - p2) * p3 * (1-pO),
-               ABBA_BAAB = (1 - p1) * p2 * p3 * (1-pO) + p1 * (1-p2) * (1-p3) * pO,
-               BABA_ABAB = p1 * (1 - p2) * p3 * (1-pO) + (1-p1) * p2 * (1-p3) * pO,
-               ABBA_f = (1 - p1) * p3 * p3 * (1-pO),
-               BABA_f = p1 * (1-p3) * p3 * (1-pO),
-               ABBA_BAAB_f = (1 - p1) * p3 * p3 * (1-pO) + p1 * (1-p3)**2 * pO,
-               BABA_ABAB_f = p1 * (1 - p3) * p3 * (1-pO) + (1-p1) * p3 * (1-p3) * pO
-               )
-    }
+# Simon H. Martin 2020
+# simon.martin@ed.ac.uk
 
+# This script accompanies the paper:
+# "Signatures of introgression across the allelel frequency spectrum"
+# by Simon H. Martin and William Amos
 
+# It contains functions for computing and plotting the D frequency spectrum
+# and related statistics from an input site frequency spectrum (SFS).
 
+# to accomodate large, sparse, frequency spectra, we represent the SFS in two parts.
+# First is the BASE_COUNTS: a matrix with the three columns corresponding to populations P1, P2 and P3.
+# An optional fourth column for the outgroup can also be provided, if the SFS is unpolarised
+# Second is the SITE_COUNTS: a vector with length corresponding to the number of rows
+# in the base_counts matrix, giving the number of sites corresponding to each combination of counts
+# The SFS may be sparse: not all combinations of counts need to be provided if there are zero sites
+# with a given combination.
+
+# Most functions also require the haploid sample sizes (Ns) of the three (or four) populations as input.
+# If these are not provided, they are inferred from the highest value in the base_counts columns.
+# This is not recommended for an empirical SFS, because high-frequency combinations are typically rare and may be absent.
+
+################################################################################
+
+#function to compute the D frequency spectrum
 get.DFS <- function(base_counts, site_counts=NULL, Ns=NULL){
     
     #if the number of haplotypes per population is not specified, assume it is the maximum value observed - NOT RECOMMENDED
@@ -63,7 +71,7 @@ get.DFS <- function(base_counts, site_counts=NULL, Ns=NULL){
     }
 
 
-
+#function to compute the overall D statistic
 get.D.from.base.counts <- function(base_counts, site_counts=NULL, Ns=NULL, full=FALSE){
     
     #if the number of haplotypes per population is not specified, assume it is the maximum value observed - NOT RECOMMENDED
@@ -98,6 +106,9 @@ get.D.from.base.counts <- function(base_counts, site_counts=NULL, Ns=NULL, full=
         }
     }
 
+# Function to compute the overall f statistic (Green et al. 2010)
+# Assumes that P3 is the donor population and P2 the only recipient.
+# If this is false, the value will be misleading
 get.f.from.base.counts <- function(base_counts, site_counts=NULL, Ns=NULL, full=FALSE){
     
     #if the number of haplotypes per population is not specified, assume it is the maximum value observed - NOT RECOMMENDED
@@ -139,7 +150,7 @@ get.f.from.base.counts <- function(base_counts, site_counts=NULL, Ns=NULL, full=
         }
     }
 
-
+#function to compute the f4 statistic (Patterson et al. 2012)
 get.f4.from.base.counts <- function(base_counts, site_counts=NULL, Ns=NULL) {
     #if the number of haplotypes per population is not specified, assume it is the maximum value observed - NOT RECOMMENDED
     if (is.null(Ns) == TRUE) Ns <- apply(base_counts, 2, max)
@@ -150,7 +161,7 @@ get.f4.from.base.counts <- function(base_counts, site_counts=NULL, Ns=NULL) {
     else weighted.mean(f4_by_site,site_counts)
     }
 
-
+#fucntion to compute the doubly-conditioned frequency spectrum (Yang et al. 2012)
 get.dcfs <- function(base_counts, site_counts=NULL, Ns=NULL){
     
     #if the number of haplotypes per population is not specified, assume it is the maximum value observed - NOT RECOMMENDED
@@ -180,6 +191,7 @@ get.dcfs <- function(base_counts, site_counts=NULL, Ns=NULL){
     dcfs_unscaled/sum(dcfs_unscaled)
     }
 
+#an experimental function to compute a 2-dimensional D frequency spectrum
 get.DFS2D <- function(base_counts, site_counts=NULL, Ns=NULL){
     
     #if the number of haplotypes per population is not specified, assume it is the maximum value observed - NOT RECOMMENDED
@@ -220,7 +232,7 @@ get.DFS2D <- function(base_counts, site_counts=NULL, Ns=NULL){
     }
 
 
-
+#function to polarize counts for unpolarized SFS
 polarize.counts <- function(counts, Ns, OGcolumn=NULL, outgroup_pol_to_NA=TRUE){
     #If outgroup column is not specified, assume it is last one 
     OG <- ifelse(is.null(OGcolumn) == TRUE, ncol(counts), OGcolumn)
@@ -234,40 +246,25 @@ polarize.counts <- function(counts, Ns, OGcolumn=NULL, outgroup_pol_to_NA=TRUE){
     counts_plr
     }
 
-
-################################################ plotting functions
-
-plotDFS <- function(DFS, weights, method="lines", ylim=c(-1,1), show_D=TRUE, col_D="black", width_scale=100, no_xlab=FALSE){
+#function to compute ABBA and BABA counts from allele frequencies for four populations
+get.patterns <- function(p1, p2, p3, pO=NULL){
+    #assume that if there's no outgroup, it is always fixed ancestral
+    if (is.null(pO)==TRUE | length(pO) == 0) pO <- 0
     
-    if (method == "lines"){
-        N = length(DFS)
-        plot(0, xlim = c(1,N), ylim = ylim, cex=0, xlab = "", ylab = "", xaxt="n", bty="n")
-        abline(h=0)
-        segments(1:N, 0, 1:N, DFS, lwd = width_scale*weights, lend=1)
-        }
-    
-    if (method == "bars") barplot(DFS, col= rgb(0,0,0,weights), ylim = ylim)
-    
-    if (method == "scaled_bars") barplot(DFS*weights, ylim = ylim)
-    
-    if (no_xlab == FALSE) mtext(1,text="Derived allele frequency", line = 0)
-    
-    mtext(2,text=expression(italic("D")), line = 2.8, las=2)
-    if (show_D == TRUE) abline(h= sum(DFS * weights), lty = 2, col=col_D)
-    
+    data.frame(ABBA = (1 - p1) * p2 * p3 * (1-pO),
+               BABA = p1 * (1 - p2) * p3 * (1-pO),
+               ABBA_BAAB = (1 - p1) * p2 * p3 * (1-pO) + p1 * (1-p2) * (1-p3) * pO,
+               BABA_ABAB = p1 * (1 - p2) * p3 * (1-pO) + (1-p1) * p2 * (1-p3) * pO,
+               ABBA_f = (1 - p1) * p3 * p3 * (1-pO),
+               BABA_f = p1 * (1-p3) * p3 * (1-pO),
+               ABBA_BAAB_f = (1 - p1) * p3 * p3 * (1-pO) + p1 * (1-p3)**2 * pO,
+               BABA_ABAB_f = p1 * (1 - p3) * p3 * (1-pO) + (1-p1) * p3 * (1-p3) * pO
+               )
     }
 
 
-plot.dcfs <- function(dcfs){
-    plot(dcfs, type="b")
-    }
-
-
-################################################ other miscilaneous functions
-
-#Most function here use a table format for the SFS, this is more suitable for a large, sparce array
-#This function converts to the more conventional NxN(xN...) array.
-
+# Most functiona here use a table format for the SFS, this is more suitable for a large, sparce array
+# This function converts to the more conventional NxN(xN...) array.
 sfs.table.to.array <- function(sfs_table, dims=NULL, count_col=NULL){
     if (is.null(dims)==TRUE) dims <- apply(sfs_table[,-ncol(sfs_table)], 2, max) + 1
     ndim <- length(dims)
@@ -279,3 +276,32 @@ sfs.table.to.array <- function(sfs_table, dims=NULL, count_col=NULL){
     arr
     }
 
+################################################ plotting functions
+
+plotDFS <- function(DFS, weights, method="lines", ylim=c(-1,1), show_D=TRUE,
+                    col="black", col_D="black", width_scale=100, no_xlab=FALSE, add=FALSE){
+    
+    if (method == "lines"){
+        N = length(DFS)
+        if (add == FALSE){
+            plot(0, xlim = c(1,N), ylim = ylim, cex=0, xlab = "", ylab = "", xaxt="n", bty="n")
+            abline(h=0)
+            }
+        segments(1:N, 0, 1:N, DFS, lwd = width_scale*weights, lend=1, col=col)
+        }
+    
+    if (method == "bars") barplot(DFS, col= rgb(0,0,0,weights), ylim = ylim, add=add)
+    
+    if (method == "scaled_bars") barplot(DFS*weights, ylim = ylim, add=add)
+    
+    if (no_xlab == FALSE & add == FALSE) mtext(1,text="Derived allele frequency", line = 0)
+    
+    if (add == FALSE) mtext(2,text=expression(italic("D")), line = 2.8, las=2)
+    if (show_D == TRUE) abline(h= sum(DFS * weights), lty = 2, col=col_D)
+    
+    }
+
+
+plot.dcfs <- function(dcfs){
+    plot(dcfs, type="b")
+    }
