@@ -9,6 +9,8 @@
 
 *D*<sub>FS</sub> is a simple extension to the classic D statistic (AKA the ABBA BABA test). *D*<sub>FS</sub> partitions *D* according to the frequencies of derived alleles. Thus, it reveals how the overall *D* value is broken down across different allele frequency classes (or bins). *D*<sub>FS</sub> therefore carries information about the timing and direction of introgression.
 
+See our [preprint](https://doi.org/10.1101/2020.07.06.189043).
+
 Check out this [SHINY app](https://shmartin.shinyapps.io/shiny_plot_dfs_moments/) that allows you to explore how *D*<sub>FS</sub> behavies over a range of model parameters.
 
 ## Code in this repository
@@ -17,17 +19,15 @@ Check out this [SHINY app](https://shmartin.shinyapps.io/shiny_plot_dfs_moments/
 
 `plot_DFS_from_SFS.R` gives code to compute and plot *D*<sub>FS</sub> given an input frequency spectrum (see below for details on the input). Example data for six taxa are provided in the `empirical_data` directory.
 
-`sim_DFS_moments.R` provides code to run simulations locally (either batch or singlular). The simulations are run by sending commands to the python script `sim_SFS_moments.py`, which requires the [`moments`](https://bitbucket.org/simongravel/moments/src/master/) package and `numpy` to be installed on your system.
+`sim_DFS_moments.R` provides code to run simulations locally (either batch or singlular). The simulations are run by sending commands to the python script `sim_SFS_moments.py`, which requires the [`moments`](https://bitbucket.org/simongravel/moments/src/master/) package ([Jouganous et al. 2017](https://doi.org/10.1534/genetics.117.200493)) and `numpy` to be installed on your system.
 
 `SHINY_sim_DFS_moments/` is a directory containing an R SHINY app, that you can run locally to simulate and visualise *D*<sub>FS</sub> for any model you choose.
 
 ## Explore *D*<sub>FS</sub> using a local R SHINY app
 
-The easiest way to simulate *D*<sub>FS</sub> for any model you like is to run the provided R SHINY app locally. You will need `Rstudio` with the `shiny` package installed, as well as the [`moments`](https://bitbucket.org/simongravel/moments/src/master/) and `numpy` python packages installed.
+The easiest way to simulate *D*<sub>FS</sub> for any model you like is to run the provided R SHINY app locally. You will need `R`, `Rstudio` and the `shiny` and `shinywidgets` packages installed, as well as the [`moments`](https://bitbucket.org/simongravel/moments/src/master/) and `numpy` python packages installed.
 
-To run the app, lauch `Rstudio` and set the working directory to `SHINY_sim_DFS_moments/`.
-
-Then, in the console run:
+To run the app, lauch `Rstudio` and set the working directory to `SHINY_sim_DFS_moments/`. Then, in the console run:
 
 ```R
 library(shiny)
