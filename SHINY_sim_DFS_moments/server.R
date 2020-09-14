@@ -252,12 +252,12 @@ function(input, output, session){
         dev.off()
         
         pdf(paste0(input$prefix,".pdf"), width=10,height=4)
-        par(mar=c(1.2,4,1,1))
+        par(mar=c(1.2,4,1,4))
         plotDFS(reactive_data$dfs_data$DFS, reactive_data$dfs_data$weights, col_D="red")
         dev.off()
         
         png(paste0(input$prefix,".png"), width = 2000, height = 800, res=300)
-        par(mar=c(1.2,4,1,1))
+        par(mar=c(1.2,4,1,4))
         plotDFS(reactive_data$dfs_data$DFS, reactive_data$dfs_data$weights, col_D="red")
         dev.off()
         
