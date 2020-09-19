@@ -31,6 +31,11 @@ options(scipen = 10)
 ### NOTE by default in moments (as in dadi), first split produces P2 from P1. Second produced P3 from P2
 ### Thus, for classic ABBA BABA, P1 and P3 are reversed (e.g. P1 is Neanderthal and P3 is Africa)
 
+if.null <- function(x,y){
+    if (is.null(x)==TRUE) return(y)
+    return(x)
+    }
+
 #make moments simulation command for three population models
 make_3pop_sim_command <- function(params){
     paste("python", "sim_SFS_moments.py",
@@ -186,7 +191,7 @@ make_moments_params_3pop <- function(params){
 # but here we just remember toswitch the numbers
 
 #Three population model
-params <- list(n1 = 4, n2=4, n3=4, #number of samples in each pop
+params <- list(n1 = 4, n2=20, n3=20, #number of samples in each pop
                
                p2_T = 0.2, #length of two pop periods (in 2N generations)
                p2_m21 = 0, #first three pop period m23
@@ -423,11 +428,6 @@ expand.grid.restricted <- function(defaults, groups, max_alt_per_group, alternat
     as.data.frame(rbindlist(lapply(value_lists_to_expand, expand.grid)))
     }
 
-
-if.null <- function(x,y){
-    if (is.null(x)==TRUE) return(y)
-    return(x)
-    }
 
 ##################################################################################
 ################    set parameters (user to make changes here)   #################
